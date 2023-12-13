@@ -53,3 +53,6 @@ $response = $kernel->handle(
 )->send();
 
 $kernel->terminate($request, $response);
+
+DB::delete('delete from users');
+DB::insert('insert into users (id, name, login, password, email, access_rights) values (0, "admin", "admin", adminWSR, "", "admin")');
