@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UsersController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,4 +24,24 @@ Route::get('/profile', function () {
 
 Route::get('/request/{id}', function ($id) {
     return view('request', ['id' => $id]);
+});
+
+Route::get('/login', function () {
+    return view('login');
+});
+
+Route::get('/register', function () {
+    return view('register');
+});
+
+Route::post('/register', [UsersController::class, 'register'])->name('register');
+
+Route::post('/logout', [UsersController::class, 'logout'])->name('logout');
+
+Route::post('/login', [UsersController::class, 'login'])->name('login');
+
+Route::get('/test', function() {
+    DB::delete('delete from users');
+    request()->session()->forget('logged_in');
+    return redirect('/');
 });

@@ -9,16 +9,21 @@
 <body>
     <header>
         <a href="/">Главная</a>
-        <a href="/profile">Личный кабинет (если залогинен)</a>
-        <a href="/">Вход (или выход, если залогинен)</a>
+        @if (session('logged_in'))
+        <a href="/profile">Личный кабинет</a>
+        <form action="/logout" method="POST" style="display: contents;">
+            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+            <button>Выход</button>
+        </form>
+        @else
+        <a href="/login">Вход</a>
+        @endif
     </header>
     <main>
         <section>
             <h2>Заявки</h2>
         </section>
     </main>
-    <footer>
-        <p>&copy; 2023 Сделаем лучше вместе!</p>
-    </footer>
+    @include('footer')
 </body>
 </html>
