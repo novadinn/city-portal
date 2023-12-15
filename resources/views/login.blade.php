@@ -16,11 +16,11 @@
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                 <div>
                     <label for="login">Логин</label>
-                    <input type="login" name="login" id="login" placeholder="" value='' required>
+                    <input type="text" name="login" id="login" placeholder="" value='' required>
                 </div>
                 <div>
                     <label for="password">Пароль</label>
-                    <input type="password" name="password" id="password" placeholder="" value='' required>
+                    <input type="text" name="password" id="password" placeholder="" value='' required>
                 </div>
                 <button>Войти</button>
 
