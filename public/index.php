@@ -54,5 +54,4 @@ $response = $kernel->handle(
 
 $kernel->terminate($request, $response);
 
-DB::delete('delete from users');
-DB::insert('insert into users (id, name, login, password, email, access_rights) values (0, "admin", "admin", "adminWSR", "", "admin")');
+DB::insert('insert ignore into users (name, login, password, email, access_rights) values ("admin", "admin", "adminWSR", "", "admin")');

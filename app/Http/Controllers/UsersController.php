@@ -4,10 +4,17 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
+use Redirect;
 
 class UsersController extends Controller
 {
     public function register() {
+        $validator = Validator::make(
+            array('password' => 'Пароли не совпадают!'),
+            array('user_exists' => 'Пользователь уже существует!')
+        );
+
         $inputs = request()->all();
 
         $name = request()->get('name');
@@ -17,26 +24,21 @@ class UsersController extends Controller
         $email = request()->get('email');
 
         if($password != $password_confirmation) {
-            // TODO:
+            $validator->errors()->add('password', 'Пароли не совпадают!');
+            return Redirect::back()->withErrors($validator);
         }
 
-        $user_count = DB::table('users')
-            ->select('name', 'email')
+        $users = DB::table('users')
             ->where('name', $name)
             ->where('email', $email)
-            ->count();
+            ->get();
+        $user_count = $users->count();
         if($user_count > 0) {
-            // TODO:
+            $validator->errors()->add('user_exists', 'Пользователь уже существует!');
+            return Redirect::back()->withErrors($validator);
         }
 
-        DB::table('users')->insert(
-            array(
-                'name' => $name,
-                'login' => $login,
-                'password' => $password,
-                'email' => $email
-            )
-        );
+        DB::insert('insert into users (name, login, password, email, access_rights) values (?, ?, ?, ?, ?)', [$name, $login, $password, $email, "user"]);
 
         request()->session()->put('logged_in', true);
 
@@ -50,6 +52,11 @@ class UsersController extends Controller
     }
 
     public function login() {
+        $validator = Validator::make(
+            array('no_such_user' => 'Пользователь не найден!'),
+            array('password' => 'Пароли не совпадают!')
+        );
+
         $inputs = request()->all();
 
         $login = request()->get('login');
@@ -60,11 +67,12 @@ class UsersController extends Controller
             ->where('login', $login)
             ->where('password', $password)
             ->count();
-        if($user_count > 0) {
-            // TODO:
-        } else {
-            request()->session()->put('logged_in', true);
+        if($user_count == 0) {
+            $validator->errors()->add('no_such_user', 'Пользователь не найден!');
+            return Redirect::back()->withErrors($validator);
         }
+
+        request()->session()->put('logged_in', true);
 
         return redirect('/');
     }

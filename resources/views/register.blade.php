@@ -33,6 +33,14 @@
                     <label for="email">Email</label>
                     <input type="email" name="email" id="email" placeholder="" value='' required>
                 </div>
+
+                @if($errors->has('password'))
+                <p>{{ $errors->first('password') }}</p>
+                @endif
+                @if($errors->has('user_exists'))
+                <p>{{ $errors->first('user_exists') }}</p>
+                @endif
+
                 <button type="submit">Зарегистрироваться</button>
             </form>
         </section>

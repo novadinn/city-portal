@@ -23,6 +23,10 @@
                     <input type="password" name="password" id="password" placeholder="" value='' required>
                 </div>
                 <button>Войти</button>
+
+                @if($errors->has('no_such_user'))
+                <p>{{ $errors->first('no_such_user') }}</p>
+                @endif
             </form>
 
             <h2>Не зарегестрированы?</h2>
