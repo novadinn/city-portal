@@ -38,15 +38,25 @@ class UsersController extends Controller
             return Redirect::back()->withErrors($validator);
         }
 
+        $logins = DB::table('users')
+            ->where('login', $login)
+            ->get();
+        if($logins->count() > 0) {
+            $validator->errors()->add('user_exists', 'Логин уже занят!');
+            return Redirect::back()->withErrors($validator);
+        }
+
         DB::insert('insert into users (name, login, password, email, access_rights) values (?, ?, ?, ?, ?)', [$name, $login, $password, $email, "user"]);
 
         request()->session()->put('logged_in', true);
+        request()->session()->put('login', $login);
 
         return redirect('/');
     }
 
     public function logout() {
         request()->session()->forget('logged_in');
+        request()->session()->forget('login');
 
         return redirect('/');
     }
@@ -73,6 +83,7 @@ class UsersController extends Controller
         }
 
         request()->session()->put('logged_in', true);
+        request()->session()->put('login', $login);
 
         return redirect('/');
     }

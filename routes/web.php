@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UsersController;
+use App\Http\Controllers\RequestsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,6 +27,8 @@ Route::get('/request/{id}', function ($id) {
     return view('request', ['id' => $id]);
 });
 
+Route::post('/request', [RequestsController::class, 'createNew'])->name('createNew');
+
 Route::get('/login', function () {
     return view('login');
 });
@@ -43,5 +46,6 @@ Route::post('/login', [UsersController::class, 'login'])->name('login');
 Route::get('/test', function() {
     DB::delete('delete from users');
     request()->session()->forget('logged_in');
+    request()->session()->forget('login');
     return redirect('/');
 });

@@ -24,10 +24,25 @@
                 <textarea name="description" id="description" required> </textarea>
             </div>
             <div>
-                <label for="photo">Фото</label>
-                <input type="file" name="photo" id="photo" placeholder="" value='' required accept="image/png, image/jpeg">
+                <label for="photo_path">Фото</label>
+                <input type="file" name="photo_path" id="photo_path" placeholder="" value='' required accept="image/png, image/jpeg">
             </div>
+
+            <button>Создать</button>
         <h1>Мои заявки</h1>
+        <!-- TODO: select only for specified user -->
+        @php
+        $requests = DB::table('requests')->where('user_login', session('login'))->get();
+        @endphp
+        @foreach($requests as $request)
+        <article>
+            <h2>{{ $request->name }}</h2>
+            <p>{{ $request->status }}</p>
+            <p>{{ $request->category }}</p>
+            <time>{{ $request->created_at }}</time>
+            <p>{{ $request->description }}</p>
+        </article>
+        @endforeach
     </main>
     @include('footer')
 </body>

@@ -13,11 +13,12 @@ return new class extends Migration
     {
         Schema::create('requests', function (Blueprint $table) {
             $table->id();
+            $table->string('user_login');
             $table->string('name');
-            $table->enum('category', ['default'])->default('default');
+            $table->string('category');
             $table->string('description');
-            $table->enum('status', ['new', 'resolved', 'declined']);
-            $table->binary('photo');
+            $table->enum('status', ['Новая', 'Решена', 'Отклонена']);
+            $table->string('photo_path');
             $table->timestamps();
         });
     }
