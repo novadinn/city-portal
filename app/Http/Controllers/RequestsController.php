@@ -21,4 +21,14 @@ class RequestsController extends Controller
 
         return redirect('/profile');
     }
+
+    public function delete() {
+        $inputs = request()->all();
+
+        $id = request()->get('id');
+
+        DB::table('requests')->delete($id);
+
+        return redirect('/profile');
+    }
 }

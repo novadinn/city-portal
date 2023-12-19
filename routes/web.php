@@ -29,6 +29,8 @@ Route::get('/request/{id}', function ($id) {
 
 Route::post('/request', [RequestsController::class, 'createNew'])->name('createNew');
 
+Route::post('/request-delete', [RequestsController::class, 'delete'])->name('delete');
+
 Route::get('/login', function () {
     return view('login');
 });
