@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+    <style>
+    </style>
 </head>
 <body>
     @include('header')
@@ -31,25 +33,64 @@
 
             <button form="request-form">Создать</button>
         <h1>Мои заявки</h1>
+        <div id="filter-button-container">
+            <button class="filter-button filter-active-button" onclick="filterSelection('all')">Все</button>
+            <button class="filter-button" onclick="filterSelection('Новая')">Новые</button>
+            <button class="filter-button" onclick="filterSelection('Решена')">Решенные</button>
+            <button class="filter-button" onclick="filterSelection('Отклонена')">Отклоненные</button>
+        </div>
         @php
         $requests = DB::table('requests')->where('user_login', session('login'))->get();
         @endphp
         @foreach($requests as $request)
-        <article>
-            <h2>{{ $request->name }}</h2>
-            <p>{{ $request->status }}</p>
-            <p>{{ $request->category }}</p>
-            <time>{{ $request->created_at }}</time>
-            <p>{{ $request->description }}</p>
+        <div class="{{ 'request-filter-div'.' '.$request->status }}">
+            <article>
+                <h2>{{ $request->name }}</h2>
+                <p>{{ $request->status }}</p>
+                <p>{{ $request->category }}</p>
+                <time>{{ $request->created_at }}</time>
+                <p>{{ $request->description }}</p>
 
-            <form action="/request-delete" method="POST" style="display: contents;" id="{{ 'form-request-delete'.$request->id }}">
-                <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                <input type="hidden" name="id" value="{{ $request->id }}">
-                <button form="{{ 'form-request-delete'.$request->id }}">Удалить заявку</button>
-            </form>
-        </article>
+                <form action="/request-delete" method="POST" style="display: contents;" id="{{ 'form-request-delete'.$request->id }}">
+                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                    <input type="hidden" name="id" value="{{ $request->id }}">
+                    <button form="{{ 'form-request-delete'.$request->id }}">Удалить заявку</button>
+                </form>
+            </article>
+        </div>
         @endforeach
     </main>
     @include('footer')
 </body>
+<script>
+        filterSelection("all")
+        function filterSelection(c) {
+            var x, i;
+            x = document.getElementsByClassName("request-filter-div");
+            if(c == "all") c = "";
+            for (i = 0; i < x.length; i++) {
+                console.log(c);
+                if (x[i].className.indexOf(c) > -1) w3AddClass(x[i]);
+                else w3RemoveClass(x[i]);
+            }
+        }
+
+        function w3AddClass(element) {
+            element.style.display = "block";
+        }
+
+        function w3RemoveClass(element) {
+            element.style.display = "none";
+        }
+
+        var btnContainer = document.getElementById("filter-button-container");
+        var btns = btnContainer.getElementsByClassName("filter-button");
+        for (var i = 0; i < btns.length; i++) {
+            btns[i].addEventListener("click", function() {
+                var current = document.getElementsByClassName("filter-active-button");
+                current[0].className = current[0].className.replace(" filter-active-button", "");
+                this.className += " filter-active-button";
+            });
+        }
+    </script>
 </html>
