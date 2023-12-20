@@ -23,13 +23,22 @@ Route::get('/profile', function () {
     return view('profile');
 });
 
-Route::get('/request/{id}', function ($id) {
-    return view('request', ['id' => $id]);
+Route::get('/request-change-status/{id}', function ($id) {
+    return view('request-change-status', ['id' => $id]);
 });
 
 Route::post('/request', [RequestsController::class, 'createNew'])->name('createNew');
 
 Route::post('/request-delete', [RequestsController::class, 'delete'])->name('delete');
+
+Route::get('/request-status', function () {
+    $inputs = request()->all();
+    $id = request()->get('id');
+
+    return redirect('request-change-status/'.$id);
+});
+
+Route::post('/request-change-status', [RequestsController::class, 'changeStatus'])->name('changeStatus');
 
 Route::get('/login', function () {
     return view('login');
@@ -44,10 +53,3 @@ Route::post('/register', [UsersController::class, 'register'])->name('register')
 Route::post('/logout', [UsersController::class, 'logout'])->name('logout');
 
 Route::post('/login', [UsersController::class, 'login'])->name('login');
-
-Route::get('/test', function() {
-    DB::delete('delete from users');
-    request()->session()->forget('logged_in');
-    request()->session()->forget('login');
-    return redirect('/');
-});

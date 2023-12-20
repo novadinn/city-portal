@@ -31,4 +31,27 @@ class RequestsController extends Controller
 
         return redirect('/profile');
     }
+
+    public function changeStatus() {
+        $inputs = request()->all();
+
+        $id = request()->get('id');
+        $status = request()->get('statuses');
+
+        if($status == 'solved') {
+            // TODO: add photo
+            $photo = request()->get('photo_path');
+            DB::table('requests')
+                ->where('id', $id) 
+                ->limit(1)
+                ->update(array('status' => 'Решена')); 
+        } else if($status == 'declined') {
+            DB::table('requests')
+                ->where('id', $id) 
+                ->limit(1)
+                ->update(array('status' => 'Отклонена')); 
+        }
+
+        return redirect('request-change-status/'.$id);
+    }
 }

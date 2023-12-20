@@ -10,6 +10,27 @@
 <body>
     @include('header')
     <main>
+        @if (session('login') == 'admin')
+        <h1>Заявки пользователей</h1>
+        @php
+        $requests = DB::table('requests')->get();
+        @endphp
+        @foreach($requests as $request)
+        <article>
+            <h2>{{ $request->name }}</h2>
+            <p>{{ $request->status }}</p>
+            <p>{{ $request->category }}</p>
+            <time>{{ $request->created_at }}</time>
+            <p>{{ $request->description }}</p>
+
+            <form action="/request-status" method="get" style="display: contents;" id="{{ 'form-request-delete'.$request->id }}">
+                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                <input type="hidden" name="id" value="{{ $request->id }}">
+                <button form="{{ 'form-request-delete'.$request->id }}">Изменить статус</button>
+            </form>
+        </article>
+        @endforeach
+        @else
         <h1>Создать заявку</h1>
         <form action="/request" method="POST" id="request-form">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
@@ -29,9 +50,10 @@
                 <label for="photo_path">Фото</label>
                 <input type="file" name="photo_path" id="photo_path" placeholder="" value='' required accept="image/png, image/jpeg">
             </div>
-        </form>
 
             <button form="request-form">Создать</button>
+        </form>
+
         <h1>Мои заявки</h1>
         <div id="filter-button-container">
             <button class="filter-button filter-active-button" onclick="filterSelection('all')">Все</button>
@@ -59,38 +81,38 @@
             </article>
         </div>
         @endforeach
+        @endif
     </main>
     @include('footer')
 </body>
 <script>
-        filterSelection("all")
-        function filterSelection(c) {
-            var x, i;
-            x = document.getElementsByClassName("request-filter-div");
-            if(c == "all") c = "";
-            for (i = 0; i < x.length; i++) {
-                console.log(c);
-                if (x[i].className.indexOf(c) > -1) w3AddClass(x[i]);
-                else w3RemoveClass(x[i]);
-            }
+    filterSelection("all")
+    function filterSelection(c) {
+        var x, i;
+        x = document.getElementsByClassName("request-filter-div");
+        if(c == "all") c = "";
+        for (i = 0; i < x.length; i++) {
+            if (x[i].className.indexOf(c) > -1) w3AddClass(x[i]);
+            else w3RemoveClass(x[i]);
         }
+    }
 
-        function w3AddClass(element) {
-            element.style.display = "block";
-        }
+    function w3AddClass(element) {
+        element.style.display = "block";
+    }
 
-        function w3RemoveClass(element) {
-            element.style.display = "none";
-        }
+    function w3RemoveClass(element) {
+        element.style.display = "none";
+    }
 
-        var btnContainer = document.getElementById("filter-button-container");
-        var btns = btnContainer.getElementsByClassName("filter-button");
-        for (var i = 0; i < btns.length; i++) {
-            btns[i].addEventListener("click", function() {
-                var current = document.getElementsByClassName("filter-active-button");
-                current[0].className = current[0].className.replace(" filter-active-button", "");
-                this.className += " filter-active-button";
-            });
-        }
-    </script>
+    var btnContainer = document.getElementById("filter-button-container");
+    var btns = btnContainer.getElementsByClassName("filter-button");
+    for (var i = 0; i < btns.length; i++) {
+        btns[i].addEventListener("click", function() {
+            var current = document.getElementsByClassName("filter-active-button");
+            current[0].className = current[0].className.replace(" filter-active-button", "");
+            this.className += " filter-active-button";
+        });
+    }
+</script>
 </html>
