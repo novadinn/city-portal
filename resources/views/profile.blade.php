@@ -10,27 +10,6 @@
 <body>
     @include('header')
     <main>
-        @if (session('login') == 'admin')
-        <h1>Заявки пользователей</h1>
-        @php
-        $requests = DB::table('requests')->get();
-        @endphp
-        @foreach($requests as $request)
-        <article>
-            <h2>{{ $request->name }}</h2>
-            <p>{{ $request->status }}</p>
-            <p>{{ $request->category }}</p>
-            <time>{{ $request->created_at }}</time>
-            <p>{{ $request->description }}</p>
-
-            <form action="/request-status" method="get" style="display: contents;" id="{{ 'form-request-delete'.$request->id }}">
-                <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                <input type="hidden" name="id" value="{{ $request->id }}">
-                <button form="{{ 'form-request-delete'.$request->id }}">Изменить статус</button>
-            </form>
-        </article>
-        @endforeach
-        @else
         <h1>Создать заявку</h1>
         <form action="/request" method="POST" id="request-form">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
@@ -39,8 +18,15 @@
                 <input type="text" name="name" id="name" placeholder="" value='' required>
             </div>
             <div>
+                @php
+                $categories = DB::table('categories')->get();
+                @endphp
                 <label for="category">Категория</label>
-                <input type="text" name="category" id="category" placeholder="" value='' required>
+                <select name="category" id="category" >
+                    @foreach($categories as $category)
+                        <option value="{{ $category->name }}">{{ $category->name }}</option>
+                    @endforeach
+                </select>
             </div>
             <div>
                 <label for="description">Описание</label>
@@ -81,7 +67,6 @@
             </article>
         </div>
         @endforeach
-        @endif
     </main>
     @include('footer')
 </body>
