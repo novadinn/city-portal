@@ -122,10 +122,6 @@
         reader.readAsDataURL(input.files[0]);
     });
 
-    // const form = document.getElementById('request-form');
-    // document.getElementById('request-form').onsubmit(() => {
-    //     const data = new FormData(form);
-    //     fetch("/request", { method: "POST", body: data}).then((res)=> console.log(res));
-    // })
+    
 </script>
 </html>

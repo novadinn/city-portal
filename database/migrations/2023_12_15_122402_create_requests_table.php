@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('description');
             $table->enum('status', ['Новая', 'Решена', 'Отклонена']);
             $table->string('photo_path');
+            $table->string('photo_path_solved')->default("");
             $table->timestamps();
         });
     }

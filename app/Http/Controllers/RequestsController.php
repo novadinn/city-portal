@@ -47,7 +47,7 @@ class RequestsController extends Controller
             DB::table('requests')
                 ->where('id', $id) 
                 ->limit(1)
-                ->update(array('status' => 'Решена')); 
+                ->update(array('status' => 'Решена', 'photo_path_solved' => $photo)); 
         } else if($status == 'declined') {
             DB::table('requests')
                 ->where('id', $id) 
