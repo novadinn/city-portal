@@ -34,6 +34,7 @@
             </div>
             <div>
                 <label for="photo_path">Фото</label>
+                <input type="hidden" name="photo_binary" id="photo_binary">
                 <input type="file" name="photo_path" id="photo_path" placeholder="" value='' required accept="image/png, image/jpeg">
             </div>
 
@@ -58,8 +59,19 @@
                 <p>{{ $request->category }}</p>
                 <time>{{ $request->created_at }}</time>
                 <p>{{ $request->description }}</p>
+                @php
+                $storage_path = storage_path();
+                $data = "";
+                $img_path = "{$storage_path}/app/public/images/{$request->photo_path}";
+                if(file_exists($img_path)) {
+                    $data = file_get_contents($img_path);
+                }
+                @endphp
+                @if ($data != "")
+                    <img src="{{ $data }}" width="200" height="200"/>
+                @endif
 
-                <form action="/request-delete" method="POST" style="display: contents;" id="{{ 'form-request-delete'.$request->id }}">
+                <form action="/request-delete" method="POST" id="{{ 'form-request-delete'.$request->id }}">
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
                     <input type="hidden" name="id" value="{{ $request->id }}">
                     <button form="{{ 'form-request-delete'.$request->id }}">Удалить заявку</button>
@@ -99,5 +111,21 @@
             this.className += " filter-active-button";
         });
     }
+
+    const input = document.getElementById('photo_path');
+    const binary = document.getElementById('photo_binary');
+    input.addEventListener('change', () => {
+        const reader = new FileReader();
+        reader.onload = () => {
+            binary.value = reader.result;
+        };
+        reader.readAsDataURL(input.files[0]);
+    });
+
+    // const form = document.getElementById('request-form');
+    // document.getElementById('request-form').onsubmit(() => {
+    //     const data = new FormData(form);
+    //     fetch("/request", { method: "POST", body: data}).then((res)=> console.log(res));
+    // })
 </script>
 </html>
