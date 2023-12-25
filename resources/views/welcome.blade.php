@@ -26,9 +26,19 @@
                     if(file_exists($img_path)) {
                         $data = file_get_contents($img_path);
                     }
+
+                    $data_solved = "";
+                    $img_path_solved = "{$storage_path}/app/public/images/{$request->photo_path_solved}";
+                    if(file_exists($img_path_solved)) {
+                        $data_solved = file_get_contents($img_path_solved);
+                    }
                     @endphp
                     @if ($data != "")
-                        <img src="{{ $data }}" width="200" height=400" onmouseover="this.src='/test.png'" onmouseout="this.src='{{ $data }}'"/>
+                        @if ($data_solved != "") 
+                            <img src="{{ $data }}" width="200" height="400" onmouseover="this.src='{{ $data_solved }}'" onmouseout="this.src='{{ $data }}'"/>
+                        @else
+                            <img src="{{ $data }}" width="200" height="400">
+                        @endif
                     @endif
                 </article>
             @endforeach

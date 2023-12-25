@@ -32,6 +32,7 @@
                 <option value="declined">Отклонена</option>
             </select>
             <div id="solved-photo" style="display: none">
+                <input type="hidden" name="photo_binary" id="photo_binary">
                 <label for="photo_path">Фото</label>
                 <input type="file" name="photo_path" id="photo_path" placeholder="" value='' accept="image/png, image/jpeg">
             </div>
@@ -57,5 +58,15 @@
         document.getElementById('photo_path').required = false;
        }
     }
+
+    const input = document.getElementById('photo_path');
+    const binary = document.getElementById('photo_binary');
+    input.addEventListener('change', () => {
+        const reader = new FileReader();
+        reader.onload = () => {
+            binary.value = reader.result;
+        };
+        reader.readAsDataURL(input.files[0]);
+    });
 </script>
 </html>

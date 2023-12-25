@@ -43,11 +43,13 @@ class RequestsController extends Controller
         $status = request()->get('statuses');
 
         if($status == 'solved') {
-            $photo = request()->get('photo_path');
+            $photo_path = request()->get('photo_path');
+            $photo_binary = request()->get('photo_binary');
+            Storage::disk('public')->put("images/{$photo_path}",  $photo_binary);
             DB::table('requests')
                 ->where('id', $id) 
                 ->limit(1)
-                ->update(array('status' => 'Решена', 'photo_path_solved' => $photo)); 
+                ->update(array('status' => 'Решена', 'photo_path_solved' => $photo_path)); 
         } else if($status == 'declined') {
             DB::table('requests')
                 ->where('id', $id) 
